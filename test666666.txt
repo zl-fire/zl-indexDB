@@ -1,0 +1,6 @@
+     * @description 自动识参数数据结构，动态生成graphql类型定义
+     * @param paramObj {Objectl} 接收一个对象参数
+     * @param paramObj.filePath {String|Boolean} 类型定义将输出到此string代表的路径文件，如果值为false:返回字符串到函数调用处，默认为false
+     * @param paramObj.rewrite {Boolean} 表示是否以覆盖原文件内容的方式写入。true表示是,false表示以追加的方式写入文件. 默认为false:追加
+     * @param paramObj.typeWay {String}  typeWay字段值为:input或type,input表示是输入类型,type表示输出类型
+     * @param paramObj.typeName {String} 要构建的graphql类型的名字
