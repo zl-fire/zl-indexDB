@@ -149,15 +149,30 @@ class IndexDBOperation {
      * //如果版本升级，请下刷新下页面在执行升级操作
      * let DB = new indexDBOperation("testDB4", 1, objectStores); 
      * 
-     * 添加一条数据
+     * //==============创建数据仓库时指定了keypath的模式==============
+     * 
+     * 添加一条数据(添加的数据中包含了key,或者key会自动生成并自动递增)
      * let res = await DB.addData(["hello"], { name: "zs", age: 18 });
      * 
-     * 添加多条数据
+     * 添加多条数据(添加的数据中包含了key,或者key会自动生成并自动递增)
      * let res2 = await DB.addData(["hello"], [
      * { name: "zss1", age: 18 }, 
      * { name: "zsd2", age: 18 }, 
      * { name: "zs3", age: 18 }, 
      * { name: "zsf4", age: 20 }
+     * ]);
+     * 
+     * //==============创建数据仓库时没有指定keypath的模式==============
+     * 
+     * //添加一条数据(需要手动传入指定的key)
+     * let res = await DB.addData(["hello"], { name: "zs", age: 18, thekeyName:"id" });
+     * 
+     * //添加多条数据(添加的数据中包含了key,或者key会自动生成并自动递增)
+     * let res2 = await DB.addData(["hello"], [
+     * { name: "zss1", age: 18, thekeyName:"id1"  }, 
+     * { name: "zsd2", age: 18, thekeyName:"id2" }, 
+     * { name: "zs3", age: 18 , thekeyName:"id3" }, 
+     * { name: "zsf4", age: 20 , thekeyName:"id4" }
      * ]);
      **/
     async addData(stores, data) {
@@ -179,7 +194,13 @@ class IndexDBOperation {
                 if (data instanceof Array) {
                     let resArr = [];
                     data.forEach(obj => {
-                        let res = store.add(obj);
+                        let res;
+                        if (obj.thekeyName) {
+                            res = store.add(obj, obj.thekeyName);
+                        }
+                        else {
+                            res = store.add(obj)
+                        }
                         res.onsuccess = function (event) {
                             resArr.push('数据添加成功');
                             if (resArr.length == data.length) {
@@ -194,7 +215,14 @@ class IndexDBOperation {
 
                 }
                 else {
-                    let res = store.add(data);
+                    let res;
+                    if (data.thekeyName) {
+                        // 表示用户在创建数据仓库时，没有设置keypath,所以添加数据时需要手动的指定
+                        res = store.add(data, data.thekeyName);
+                    }
+                    else {
+                        res = store.add(data)
+                    }
                     res.onsuccess = function (event) {
                         resolve(true);
                     }

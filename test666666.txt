@@ -1,8 +1,11 @@
-     * //修改单条数据(key本身就是数据元素中的一个字段)
-     * let res3 = await DB.updateData(["hello"], { name: "111", age: 111, recordID: 1 });
-     * //批量修改数据(key本身就是数据元素中的一个字段)
-     * let res4 = await DB.updateData(["hello"], [{ name: "zss111111", age: 180, recordID: 21 }, { name: "zss1222222", age: 180, recordID: 22 }, { name: "zss1333333", age: 180, recordID: 23 }]);
-     * //修改单条数据(key是额外自动生成的，即数据记录中无此字段 ，所以操作时需要我们额外传入 autoIncrementKey 表示主键id，)
-     * let res31 = await DB.updateData(["hello"], {...{ name: "111", age: 111, recordID: 1}, autoIncrementKey:1} );
-     * //修改单条数据(key是自动生成的，数据记录中含有 The_AutoIncrement_Key 字段接收自动的id值 ，操作时需要也需要传入 The_AutoIncrement_Key自动 表示主键id，)
-     * let res31 = await DB.updateData(["hello"], {...{ name: "111", age: 111, recordID: 1}, autoIncrementKey:1} );
+     * //删除数据
+     * let res5 = await DB.deleteData(["hello"], [23]);
+     * console.log(res);
+     * //删除表的所有数据
+     * let res6 = await DB.deleteData(["hello"]);
+     * console.log(res);
+     * //关闭数据库链接(当数据库的链接关闭后，对他的操作就不再有效)
+     * let res7 = await DB.close();
+     * console.log(res);
+     * //删除数据库，如果没传参就删除本身数据库，否则删除指定数据库
+     * let res8 = await DB.deleteDataBase();//删除后，可能要刷新下才能看到application中indexdb数据库的变化
