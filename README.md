@@ -1,4 +1,4 @@
-# zl-indexDB
+# zl-indexdb
 indexDB操作库---提高indexDb的使用效率
 
 ## 安装引入
