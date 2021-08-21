@@ -7,7 +7,7 @@ indexDB操作库---提高indexDb的使用效率
 
 **import方式**
 
-## 具体使用--定义并创建一个indexDB数据库
+## 创建或升级indexDB数据库
 ```js
 
 //------------- 定义数据库信息 -----------------
@@ -44,7 +44,8 @@ let objectStores = [
 window.DB = new IndexDBOpt(dbName, dbVersion, objectStores); //提示：如果数据库版本需要升级，请刷新下页面在执行升级操作
 ```
 
-## 具体使用--操作indexDB数据库
+
+## 操作indexDB数据库
 
 ```js
 (async function () {
