@@ -445,17 +445,26 @@ class IndexDBOperation {
      * //如果版本升级，请下刷新下页面在执行升级操作
      * let DB = new indexDBOperation("testDB4", 1, objectStores); 
      * 
+     * //======================key本身就是数据元素中的一个字段===========
      * //修改单条数据(key本身就是数据元素中的一个字段)
      * let res3 = await DB.updateData(["hello"], { name: "111", age: 111, recordID: 1 });
      * 
      * //批量修改数据(key本身就是数据元素中的一个字段)
      * let res4 = await DB.updateData(["hello"], [{ name: "zss111111", age: 180, recordID: 21 }, { name: "zss1222222", age: 180, recordID: 22 }, { name: "zss1333333", age: 180, recordID: 23 }]);
      * 
-     * //修改单条数据(key是额外自动生成的，即数据记录中无此字段 ，所以操作时需要我们额外传入 myAutoIncrementKey 表示主键id，)
-     * let res31 = await DB.updateData(["hello"], {...{ name: "111", age: 111, recordID: 1}, myAutoIncrementKey:1} );
+     * //======================key是自动生成的一个字段===========
      * 
-     * //修改单条数据(key是自动生成的，数据记录中含有 myAutoIncrementKey 字段接收自动的id值 ，操作时需要也需要传入 myAutoIncrementKey 表示主键id，)
-     * let res31 = await DB.updateData(["hello"], {...{ name: "111", age: 111, recordID: 1}, myAutoIncrementKey:1} );
+     * //修改单条数据(key是自动生成的，参数数据记录中无此字段 ，所以操作时需要我们额外传入 autoIncrementKey 表示主键id，)
+     *  let res3 = await DB.updateData(["hello"], { name: "111", age: 111, recordID: 1 , autoIncrementKey:1 } );
+     * 
+     * //批量修改数据(key是自动生成的，参数数据记录中无此字段 ，所以操作时需要我们额外传入 autoIncrementKey 表示主键id，)
+     * let res4 = await DB.updateData(["hello"], [
+     * { name: "zss111111", age: 180, recordID: 21 , autoIncrementKey:2 }, 
+     * { name: "zss1222222", age: 180, recordID: 22 , autoIncrementKey:3 }, 
+     * { name: "zss1333333", age: 180, recordID: 23 , autoIncrementKey:4 }
+     * ]);
+     * 
+     * 
      **/
     async updateData(stores, data) {
         let _this = this;
