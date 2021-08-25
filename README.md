@@ -6,7 +6,7 @@ indexDB操作库---提高indexDb的使用效率
 **script方式**
 ```js
 
-    <script src="https://cdn.jsdelivr.net/npm/zl-indexdb@1.2.2/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/zl-indexdb@1.2.3/index.js"></script>
     let IndexDBOpt=window["zl-indexdb"];
 
 ```

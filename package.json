@@ -1,6 +1,6 @@
 {
   "name": "zl-indexdb",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "indexDB操作库---提高indexDb的使用效率",
   "main": "index.js",
   "scripts": {
