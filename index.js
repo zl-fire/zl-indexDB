@@ -19,7 +19,7 @@
          * @param  {String} objectStores.keyMode.keyPath   表示在添加数据时，从对象类型的值中取一个字段，作为这条记录的键值，如果作为值的对象中不含有此字段，那么就会报错。
          * @param  {Boolean} objectStores.keyMode.autoIncrement   表示自动生成的递增数字作为记录的键值，一般从1开始。
          * @param  {Array} objectStores.indexs  索引数组，每个对象元素都代表了一条设置的索引,{ indexName: "keyIndex", fieldName: "key", only: { unique: false } },//索引名，字段名，索引属性值是否唯一
-         * @return  viod
+         * @return  IDBRequest对象
          * @author zl-fire 2021/08/17
          * @example
          * // 初始化时，开始创建或者打开indexDB数据库,objectStores 会在升级函数里面执行
@@ -53,7 +53,7 @@
             this.dbVersion = dbVersion;
             this.objectStores = objectStores;
             this.db = null;//数据库默认为null
-            this.getDB();//得到数据库对象：this.db = 数据库对象;
+            this.getDB();//得到数据库对象：this.db = 数据库对象;,这里可以不用await进行等待，因为后续会使用示例对象进行操作，并且还会判断db是否存在
         }
 
         /**
@@ -78,7 +78,7 @@
         * }
          */
         async createObjectStores(db, obj) {
-            let store = db.createObjectStore(obj.objectStoreName, obj.keyMode);//然后在创建,创建时知道id为键
+            let store = db.createObjectStore(obj.objectStoreName, obj.keyMode);
             if (obj.indexs && obj.indexs instanceof Array) {
                 obj.indexs.forEach(ele => {
                     store.createIndex(ele.indexName, ele.fieldName, ele.only); //索引名，字段名，索引属性值是否唯一
@@ -200,7 +200,9 @@
                         data.forEach(obj => {
                             let res;
                             if (obj.thekeyName) {
-                                res = store.add(obj, obj.thekeyName);
+                                let key=obj.thekeyName;
+                                delete obj.thekeyName;
+                                res = store.add(obj, key);
                             }
                             else {
                                 res = store.add(obj);
@@ -222,7 +224,9 @@
                         let res;
                         if (data.thekeyName) {
                             // 表示用户在创建数据仓库时，没有设置keypath,所以添加数据时需要手动的指定
-                            res = store.add(data, data.thekeyName);
+                            let key=data.thekeyName;
+                            delete data.thekeyName;
+                            res = store.add(data, key);
                         }
                         else {
                             res = store.add(data);

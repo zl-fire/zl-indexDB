@@ -4,8 +4,17 @@ indexDB操作库---提高indexDb的使用效率
 ## 安装引入
 
 **script方式**
+```js
+
+    <script src="https://cdn.jsdelivr.net/npm/zl-indexdb@1.1.1/index.js"></script>
+    let IndexDBOpt=window["zl-indexdb"];
+
+```
 
 **import方式**
+```js
+   import IndexDBOpt from "zl-indexdb"
+```
 
 ## 创建或升级indexDB数据库
 ```js
@@ -22,7 +31,7 @@ let objectStores = [
 {
     objectStoreName: "notes",//表名
     type: 1, //0:表示把已存在的删除，然后重新创建。 1：表示如果不存在才重新创建，2：表示只删除，不再进行重新创建
-    keyMode:  { autoIncrement: true, keyPath: 'recordID' },//设置主键为userId，且自动递增
+    keyMode:  { },//为空对象表示：设置主键模式为手动指定（即操作数据时需要手动指定主键）
     indexs: [ // 创建索引信息
         { indexName: "keyIndex", fieldName: "key", only: { unique: false } },//索引名，字段名，索引属性值是否唯一
         { indexName: "emailIndex", fieldName: "email", only: { unique: false } },//索引名，字段名，索引属性值是否唯一
@@ -32,7 +41,7 @@ let objectStores = [
 {
     objectStoreName: "User",//表名
     type: 1,//0:表示把已存在的删除，然后重新创建。 1：表示如果不存在才重新创建，2：表示只删除，不再进行重新创建
-    keyMode: { autoIncrement: true,keyPath: 'userId' },//设置主键为 keyword
+    keyMode: { autoIncrement: true,keyPath: 'userId' },//设置主键为 userId ，且自动递增
     indexs: [ // 创建索引信息
         { indexName: "nameIndex", fieldName: "name", only: { unique: false } },//索引名，字段名，索引属性值是否唯一
         { indexName: "ageIndex", fieldName: "age", only: { unique: false } },//索引名，字段名，索引属性值是否唯一
@@ -41,7 +50,6 @@ let objectStores = [
 }
 ]
 //------------- 开始创建或升级数据库 -----------------
-let IndexDBOpt=window["zl-indexdb"];
 window.DB = new IndexDBOpt(dbName, dbVersion, objectStores); //提示：如果数据库版本需要升级，请刷新下页面在执行升级操作
 
 ```
@@ -95,14 +103,17 @@ let res4 = await DB.updateData(["User"], [
 ]);
 
 //======================主键为手动指定的字段thekeyName，不存在于数据仓库结构中===========
-//修改单条数据
+//修改单条数据(存在就修改)
+ let res3 = await DB.updateData(["User"], { name: "222", age: 222, userId: 2 , thekeyName:"id" } );
+
+//修改单条数据（没有时会创建）
  let res3 = await DB.updateData(["User"], { name: "111", age: 111, userId: 1 , thekeyName:1 } );
 
 //批量修改数据
 let res4 = await DB.updateData(["User"], [
-{ name: "zss111111", age: 180, userId: 4 , thekeyName:2 }, 
-{ name: "zss1222222", age: 180, userId: 5 , thekeyName:3 }, 
-{ name: "zss1333333", age: 180, userId: 6 , thekeyName:4 }
+{ name: "zss111111", age: 180, userId: 4 , thekeyName:"id1" }, 
+{ name: "zss1222222", age: 180, userId: 5 , thekeyName:"id2" }, 
+{ name: "zss1333333", age: 180, userId: 6 , thekeyName:"id3" }
 ]);
 
 
@@ -140,7 +151,7 @@ console.log("==res13===",res13);
 
 
 // 删除数据
-//删除主键为23的数据
+//删除主键为3的数据
 let res5 = await DB.deleteData(["User"], [3]);
 //删除表的所有数据
 let res6 = await DB.deleteData(["User"]);
@@ -172,8 +183,12 @@ let res8 = await DB.deleteDataBase();//删除后，可能要刷新下才能看
 
 ## 注意事项说明
 1.  当开始创建或者打开indexDB数据库时,objectStores 会在升级函数里面执行
-2.  keypath参数说明:
-    * 33
-    * 22
-    * 44
+2.  keypath值示例:{autoIncrement: true,keyPath: 'userId'}
+    * autoIncrement: true, 表示设置主键自动递增（默认创建主键字段为key）
+    * keyPath: 'userId' 显式的指定主键字段为userId
+    * keypath为空对象表示：设置主键模式为每次操作数据时都要手动指定（会生成类似于map结构的键值对数据）
+    * 两则字段可以都写上，也可以写一个参数，都写上时表示以指定字段为主键，且如果没传入时对其进行自动递增。
+
+3. 手动指定行外主键适合某些一个名字代码一些信息的情况如:config:{...} , 手动指定config为主键，他的值为一个配置对象
+4. 自动生成或者指定行内主键则适合类似于mysql那种二维表的那种情况
  

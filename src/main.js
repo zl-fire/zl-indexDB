@@ -73,7 +73,7 @@ class IndexDBOperation {
     * }
      */
     async createObjectStores(db, obj) {
-        let store = db.createObjectStore(obj.objectStoreName, obj.keyMode);//然后在创建,创建时知道id为键
+        let store = db.createObjectStore(obj.objectStoreName, obj.keyMode);
         if (obj.indexs && obj.indexs instanceof Array) {
             obj.indexs.forEach(ele => {
                 store.createIndex(ele.indexName, ele.fieldName, ele.only); //索引名，字段名，索引属性值是否唯一
@@ -195,7 +195,9 @@ class IndexDBOperation {
                     data.forEach(obj => {
                         let res;
                         if (obj.thekeyName) {
-                            res = store.add(obj, obj.thekeyName);
+                            let key=obj.thekeyName;
+                            delete obj.thekeyName;
+                            res = store.add(obj, key);
                         }
                         else {
                             res = store.add(obj)
@@ -217,7 +219,9 @@ class IndexDBOperation {
                     let res;
                     if (data.thekeyName) {
                         // 表示用户在创建数据仓库时，没有设置keypath,所以添加数据时需要手动的指定
-                        res = store.add(data, data.thekeyName);
+                        let key=data.thekeyName;
+                        delete data.thekeyName;
+                        res = store.add(data, key);
                     }
                     else {
                         res = store.add(data)
