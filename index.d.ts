@@ -38,7 +38,6 @@ declare class IndexDBOperation {
      * ]
      * window.DB = new IndexDBOperation("taskNotes", 1, objectStores); //如果版本升级，请刷新下页面在执行升级操作
      */
-    
    constructor(dbName: string, dbVersion: number, objectStores: any[]);
     dbName: string;
     dbVersion: number;
